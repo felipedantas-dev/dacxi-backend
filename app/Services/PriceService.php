@@ -83,6 +83,10 @@ class PriceService
 
                 $specifiedPrices = $this->coingecko_service->getHistory($crypto["external_id"], date('d-m-Y', strtotime($datetime)));
 
+                if (!array_key_exists("market_data", $specifiedPrices)) {
+                    throw new Exception("There are no values for this cryptocurrency on the informed datetime.");
+                }
+
                 foreach ($currencies as $currency) {
                     $estimateCurrency = $this->price_repository->getOrStoreHistory($crypto["id"], $currency["id"], $datetime, $specifiedPrices["market_data"]["current_price"][$currency["symbol"]]);
 
